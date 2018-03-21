@@ -19,7 +19,8 @@ class MainActivity : AppCompatActivity() {
 
 
 
-    val url = "https://www.last.fm/"
+    val url = "https://ws.audioscrobbler.com/2.0/?method=album.search&album="
+    val url2 = "&api_key=97f9c412d1ad4a2d1dedd7fbe169fb1d&format=json"
     private var Data : ArrayList<AlbumData>?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,31 +44,33 @@ class MainActivity : AppCompatActivity() {
 
     private fun doSomething() {
 
+        for (i in 0..10) {
+            doAsync {
 
-        progressbar.visibility = View.VISIBLE
-        var input: String
+                val input = editText.text.toString()
+                val resultJson = URL(url + input + url2).readText()
+                val jsonObj = JSONObject(resultJson)
 
-        doAsync {
+                val AlbumImage = jsonObj.getJSONObject("results").getJSONObject("albummatches").getJSONArray("album")
+                        .getJSONObject(i).getJSONArray("image").getJSONObject(2).getString("#text")
 
-            input =editText.text.toString()
+                val Title = jsonObj.getJSONObject("results").getJSONObject("albummatches").getJSONArray("album")
+                        .getJSONObject(i).getString("name")
 
-            val resultJson = URL(url+input).readText()
-            val jsonObj= JSONObject(resultJson)
-            val AlbumImage = jsonObj.getJSONObject("image").getString("#text")
-            val Title = (jsonObj.getString("name"))
-            val Artist = (jsonObj.getString("artist"))
+                val Artist = jsonObj.getJSONObject("results").getJSONObject("albummatches").getJSONArray("album")
+                        .getJSONObject(i).getString("artist")
 
-            uiThread {
+                uiThread {
 
 
-                Data= ArrayList()
-                recyclerView.adapter = Adapter (Data)
-                Data?.add(AlbumData(AlbumImage,Title,Artist))
+                    Data = ArrayList()
+                    recyclerView.adapter = Adapter(Data)
+                    Data?.add(AlbumData(AlbumImage, Title, Artist))
+                }
+
+
             }
-            progressbar.visibility = View.INVISIBLE
-
 
         }
-
     }
 }

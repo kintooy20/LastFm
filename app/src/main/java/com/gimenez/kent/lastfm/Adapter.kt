@@ -21,9 +21,9 @@ class Adapter ( val data: ArrayList<AlbumData>?):RecyclerView.Adapter<Adapter.Cu
 
     override fun onBindViewHolder(holder: CustomViewHolder?, position: Int) {
             val Data = data!![position]
-            holder?.Title?.text = Data.Title
+            holder?.Title?.text = Data.name
             holder?.Singer?.text = Data.artist
-            Picasso.with(holder?.itemView?.context).load(Data.imageUrl).into(holder?.Album)
+            Picasso.with(holder?.itemView?.context).load(Data.image).into(holder?.Album)
 
 
     }

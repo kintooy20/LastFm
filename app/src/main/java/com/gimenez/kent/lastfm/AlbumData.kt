@@ -5,10 +5,10 @@ package com.gimenez.kent.lastfm
  */
 
 
-class AlbumData (
+data class AlbumData (
 
-        val Title : String,
+        val name : String,
         val artist: String,
-        val imageUrl : String
+        val image : String
 
 )
